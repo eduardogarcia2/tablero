@@ -266,11 +266,11 @@ const initializeScene = async (opts: {
   } else if (scene) {
     return isExternalScene && jsonBackendMatch
       ? {
-          scene,
-          isExternalScene,
-          id: jsonBackendMatch[1],
-          key: jsonBackendMatch[2],
-        }
+        scene,
+        isExternalScene,
+        id: jsonBackendMatch[1],
+        key: jsonBackendMatch[2],
+      }
       : { scene, isExternalScene: false };
   }
   return { scene: null, isExternalScene: false };
@@ -693,25 +693,29 @@ const ExcalidrawWrapper = () => {
   }
 
   return (
-    <div
-      style={{ height: "100%" }}
-      className={clsx("excalidraw-app", {
-        "is-collaborating": isCollaborating,
-      })}
-    >
-      <Excalidraw
-        excalidrawAPI={excalidrawRefCallback}
-        onChange={onChange}
-        initialData={initialStatePromiseRef.current.promise}
-        isCollaborating={isCollaborating}
-        onPointerUpdate={collabAPI?.onPointerUpdate}
-        UIOptions={{
-          canvasActions: {
-            toggleTheme: true,
-            export: {
-              onExportToBackend,
-              renderCustomUI: excalidrawAPI
-                ? (elements, appState, files) => {
+    <>
+      <div style={{ backgroundColor: "#f9a6a5", padding: "0", display: "flex", justifyContent: "center", fontFamily: "Arial", fontSize: "25px" }}>
+        <h2 style={{ color: "white" }}>Tablero</h2>
+      </div>
+      <div
+        style={{ height: "90%" }}
+        className={clsx("excalidraw-app", {
+          "is-collaborating": isCollaborating,
+        })}
+      >
+        <Excalidraw
+          excalidrawAPI={excalidrawRefCallback}
+          onChange={onChange}
+          initialData={initialStatePromiseRef.current.promise}
+          isCollaborating={isCollaborating}
+          onPointerUpdate={collabAPI?.onPointerUpdate}
+          UIOptions={{
+            canvasActions: {
+              toggleTheme: true,
+              export: {
+                onExportToBackend,
+                renderCustomUI: excalidrawAPI
+                  ? (elements, appState, files) => {
                     return (
                       <ExportToExcalidrawPlus
                         elements={elements}
@@ -733,161 +737,161 @@ const ExcalidrawWrapper = () => {
                       />
                     );
                   }
-                : undefined,
+                  : undefined,
+              },
             },
-          },
-        }}
-        langCode={langCode}
-        renderCustomStats={renderCustomStats}
-        detectScroll={false}
-        handleKeyboardGlobally={true}
-        autoFocus={true}
-        theme={theme}
-        renderTopRightUI={(isMobile) => {
-          if (isMobile || !collabAPI || isCollabDisabled) {
-            return null;
-          }
-          return (
-            <div className="top-right-ui">
-              {collabError.message && <CollabError collabError={collabError} />}
-              <LiveCollaborationTrigger
-                isCollaborating={isCollaborating}
-                onSelect={() =>
-                  setShareDialogState({ isOpen: true, type: "share" })
-                }
-              />
-            </div>
-          );
-        }}
-      >
-        <AppMainMenu
-          onCollabDialogOpen={onCollabDialogOpen}
-          isCollaborating={isCollaborating}
-          isCollabEnabled={!isCollabDisabled}
-        />
-        <AppWelcomeScreen
-          onCollabDialogOpen={onCollabDialogOpen}
-          isCollabEnabled={!isCollabDisabled}
-        />
-        <OverwriteConfirmDialog>
-          <OverwriteConfirmDialog.Actions.ExportToImage />
-          <OverwriteConfirmDialog.Actions.SaveToDisk />
-          {excalidrawAPI && (
-            <OverwriteConfirmDialog.Action
-              title={t("overwriteConfirm.action.excalidrawPlus.title")}
-              actionLabel={t("overwriteConfirm.action.excalidrawPlus.button")}
-              onClick={() => {
-                exportToExcalidrawPlus(
-                  excalidrawAPI.getSceneElements(),
-                  excalidrawAPI.getAppState(),
-                  excalidrawAPI.getFiles(),
-                  excalidrawAPI.getName(),
-                );
-              }}
-            >
-              {t("overwriteConfirm.action.excalidrawPlus.description")}
-            </OverwriteConfirmDialog.Action>
-          )}
-        </OverwriteConfirmDialog>
-        <AppFooter />
-        <TTDDialog
-          onTextSubmit={async (input) => {
-            try {
-              const response = await fetch(
-                `${
-                  import.meta.env.VITE_APP_AI_BACKEND
-                }/v1/ai/text-to-diagram/generate`,
-                {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
+          }}
+          langCode={langCode}
+          renderCustomStats={renderCustomStats}
+          detectScroll={false}
+          handleKeyboardGlobally={true}
+          autoFocus={true}
+          theme={theme}
+          renderTopRightUI={(isMobile) => {
+            if (isMobile || !collabAPI || isCollabDisabled) {
+              return null;
+            }
+            return (
+              <div className="top-right-ui">
+                {collabError.message && <CollabError collabError={collabError} />}
+                <LiveCollaborationTrigger
+                  isCollaborating={isCollaborating}
+                  onSelect={() =>
+                    setShareDialogState({ isOpen: true, type: "share" })
+                  }
+                />
+              </div>
+            );
+          }}
+        >
+          <AppMainMenu
+            onCollabDialogOpen={onCollabDialogOpen}
+            isCollaborating={isCollaborating}
+            isCollabEnabled={!isCollabDisabled}
+          />
+          <AppWelcomeScreen
+            onCollabDialogOpen={onCollabDialogOpen}
+            isCollabEnabled={!isCollabDisabled}
+          />
+          <OverwriteConfirmDialog>
+            <OverwriteConfirmDialog.Actions.ExportToImage />
+            <OverwriteConfirmDialog.Actions.SaveToDisk />
+            {excalidrawAPI && (
+              <OverwriteConfirmDialog.Action
+                title={t("overwriteConfirm.action.excalidrawPlus.title")}
+                actionLabel={t("overwriteConfirm.action.excalidrawPlus.button")}
+                onClick={() => {
+                  exportToExcalidrawPlus(
+                    excalidrawAPI.getSceneElements(),
+                    excalidrawAPI.getAppState(),
+                    excalidrawAPI.getFiles(),
+                    excalidrawAPI.getName(),
+                  );
+                }}
+              >
+                {t("overwriteConfirm.action.excalidrawPlus.description")}
+              </OverwriteConfirmDialog.Action>
+            )}
+          </OverwriteConfirmDialog>
+          <AppFooter />
+          <TTDDialog
+            onTextSubmit={async (input) => {
+              try {
+                const response = await fetch(
+                  `${import.meta.env.VITE_APP_AI_BACKEND
+                  }/v1/ai/text-to-diagram/generate`,
+                  {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ prompt: input }),
                   },
-                  body: JSON.stringify({ prompt: input }),
-                },
-              );
+                );
 
-              const rateLimit = response.headers.has("X-Ratelimit-Limit")
-                ? parseInt(response.headers.get("X-Ratelimit-Limit") || "0", 10)
-                : undefined;
+                const rateLimit = response.headers.has("X-Ratelimit-Limit")
+                  ? parseInt(response.headers.get("X-Ratelimit-Limit") || "0", 10)
+                  : undefined;
 
-              const rateLimitRemaining = response.headers.has(
-                "X-Ratelimit-Remaining",
-              )
-                ? parseInt(
+                const rateLimitRemaining = response.headers.has(
+                  "X-Ratelimit-Remaining",
+                )
+                  ? parseInt(
                     response.headers.get("X-Ratelimit-Remaining") || "0",
                     10,
                   )
-                : undefined;
+                  : undefined;
 
-              const json = await response.json();
+                const json = await response.json();
 
-              if (!response.ok) {
-                if (response.status === 429) {
-                  return {
-                    rateLimit,
-                    rateLimitRemaining,
-                    error: new Error(
-                      "Too many requests today, please try again tomorrow!",
-                    ),
-                  };
+                if (!response.ok) {
+                  if (response.status === 429) {
+                    return {
+                      rateLimit,
+                      rateLimitRemaining,
+                      error: new Error(
+                        "Too many requests today, please try again tomorrow!",
+                      ),
+                    };
+                  }
+
+                  throw new Error(json.message || "Generation failed...");
                 }
 
-                throw new Error(json.message || "Generation failed...");
-              }
+                const generatedResponse = json.generatedResponse;
+                if (!generatedResponse) {
+                  throw new Error("Generation failed...");
+                }
 
-              const generatedResponse = json.generatedResponse;
-              if (!generatedResponse) {
-                throw new Error("Generation failed...");
+                return { generatedResponse, rateLimit, rateLimitRemaining };
+              } catch (err: any) {
+                throw new Error("Request failed");
               }
-
-              return { generatedResponse, rateLimit, rateLimitRemaining };
-            } catch (err: any) {
-              throw new Error("Request failed");
-            }
-          }}
-        />
-        <TTDDialogTrigger />
-        {isCollaborating && isOffline && (
-          <div className="collab-offline-warning">
-            {t("alerts.collabOfflineWarning")}
-          </div>
-        )}
-        {latestShareableLink && (
-          <ShareableLinkDialog
-            link={latestShareableLink}
-            onCloseRequest={() => setLatestShareableLink(null)}
-            setErrorMessage={setErrorMessage}
+            }}
           />
-        )}
-        {excalidrawAPI && !isCollabDisabled && (
-          <Collab excalidrawAPI={excalidrawAPI} />
-        )}
+          <TTDDialogTrigger />
+          {isCollaborating && isOffline && (
+            <div className="collab-offline-warning">
+              {t("alerts.collabOfflineWarning")}
+            </div>
+          )}
+          {latestShareableLink && (
+            <ShareableLinkDialog
+              link={latestShareableLink}
+              onCloseRequest={() => setLatestShareableLink(null)}
+              setErrorMessage={setErrorMessage}
+            />
+          )}
+          {excalidrawAPI && !isCollabDisabled && (
+            <Collab excalidrawAPI={excalidrawAPI} />
+          )}
 
-        <ShareDialog
-          collabAPI={collabAPI}
-          onExportToBackend={async () => {
-            if (excalidrawAPI) {
-              try {
-                await onExportToBackend(
-                  excalidrawAPI.getSceneElements(),
-                  excalidrawAPI.getAppState(),
-                  excalidrawAPI.getFiles(),
-                );
-              } catch (error: any) {
-                setErrorMessage(error.message);
+          <ShareDialog
+            collabAPI={collabAPI}
+            onExportToBackend={async () => {
+              if (excalidrawAPI) {
+                try {
+                  await onExportToBackend(
+                    excalidrawAPI.getSceneElements(),
+                    excalidrawAPI.getAppState(),
+                    excalidrawAPI.getFiles(),
+                  );
+                } catch (error: any) {
+                  setErrorMessage(error.message);
+                }
               }
-            }
-          }}
-        />
+            }}
+          />
 
-        {errorMessage && (
-          <ErrorDialog onClose={() => setErrorMessage("")}>
-            {errorMessage}
-          </ErrorDialog>
-        )}
-      </Excalidraw>
-    </div>
+          {errorMessage && (
+            <ErrorDialog onClose={() => setErrorMessage("")}>
+              {errorMessage}
+            </ErrorDialog>
+          )}
+        </Excalidraw>
+      </div>
+    </>
   );
 };
 
